@@ -13,8 +13,8 @@
 ChorusAudioProcessorEditor::ChorusAudioProcessorEditor (ChorusAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    shadowProperties.radius = 15;
-    shadowProperties.offset = juce::Point<int> (-2, 6);
+    shadowProperties.radius = 24;
+    shadowProperties.offset = juce::Point<int> (-1, 3);
     dialShadow.setShadowProperties (shadowProperties);
         
     sliders.reserve(5);
@@ -37,7 +37,7 @@ ChorusAudioProcessorEditor::ChorusAudioProcessorEditor (ChorusAudioProcessor& p)
         addAndMakeVisible(sliders[i]);
         sliders[i]->setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
         sliders[i]->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 64, 32);
-        sliders[i]->setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.5f));
+        sliders[i]->setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.25f));
         sliders[i]->setColour(0x1001700, juce::Colour::fromFloatRGBA(1, 1, 1, 0.0f));
         sliders[i]->setColour(0x1001500, juce::Colour::fromFloatRGBA(0, 0, 0, 0.25f));
         sliders[i]->setLookAndFeel(&customDial);
@@ -45,10 +45,15 @@ ChorusAudioProcessorEditor::ChorusAudioProcessorEditor (ChorusAudioProcessor& p)
         }
         
     rateSlider.setRange(1, 100, 1);
+    rateSlider.setTextValueSuffix(" Ms");
     depthSlider.setRange(0.0f, 1.0f, 0.01f);
+    depthSlider.setTextValueSuffix(" %");
     centerDelaySlider.setRange(1, 100, 1);
+    centerDelaySlider.setTextValueSuffix(" Ms");
     feedbackSlider.setRange(-1.0f, 1.0f, 0.01f);
+    feedbackSlider.setTextValueSuffix(" %");
     mixSlider.setRange(0.0f, 1.0f, 0.01f);
+    mixSlider.setTextValueSuffix(" %");
         
     rateSliderAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, rateSliderId, rateSlider);
     depthSliderAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, depthSliderId, depthSlider);
@@ -71,9 +76,9 @@ ChorusAudioProcessorEditor::ChorusAudioProcessorEditor (ChorusAudioProcessor& p)
         
     //Making the window resizable by aspect ratio and setting size
     AudioProcessorEditor::setResizable(true, true);
-    AudioProcessorEditor::setResizeLimits(711, 237, 1374, 458);
+    AudioProcessorEditor::setResizeLimits(591, 197, 1182, 394);
     AudioProcessorEditor::getConstrainer()->setFixedAspectRatio(3.0);
-    setSize (711, 237);
+    setSize (888, 296);
 }
 
 ChorusAudioProcessorEditor::~ChorusAudioProcessorEditor()
@@ -84,7 +89,7 @@ ChorusAudioProcessorEditor::~ChorusAudioProcessorEditor()
 void ChorusAudioProcessorEditor::paint (juce::Graphics& g)
 {
     g.fillAll (juce::Colour::fromFloatRGBA(0.1f, 0.12f, 0.16f, 1.0));
-            
+                
     juce::Rectangle<int> background = AudioProcessorEditor::getLocalBounds();
     g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromFloatRGBA(0.18f, 0.20f, 0.24f, 1.0), 300 * .01, juce::Colour::fromFloatRGBA(0.12f, 0.14f, 0.18f, 1.0), 300 * .99));
     g.fillRect(background);
@@ -92,6 +97,73 @@ void ChorusAudioProcessorEditor::paint (juce::Graphics& g)
 
 void ChorusAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    //Master bounds object
+    juce::Rectangle<int> bounds = getLocalBounds();
+
+    //first column of gui
+    juce::FlexBox flexboxColumnOne;
+    flexboxColumnOne.flexDirection = juce::FlexBox::Direction::column;
+    flexboxColumnOne.flexWrap = juce::FlexBox::Wrap::noWrap;
+    flexboxColumnOne.alignContent = juce::FlexBox::AlignContent::stretch;
+
+    juce::Array<juce::FlexItem> itemArrayColumnOne;
+    itemArrayColumnOne.add(juce::FlexItem(bounds.getWidth() / 6, bounds.getHeight() / 2, rateSlider).withMargin(juce::FlexItem::Margin(bounds.getHeight() * .25, 0, 0, 0)));
+
+    flexboxColumnOne.items = itemArrayColumnOne;
+    flexboxColumnOne.performLayout(bounds.removeFromLeft(bounds.getWidth() / 5));
+    /* ============================================================================ */
+
+    //second column of gui
+    juce::FlexBox flexboxColumnTwo;
+    flexboxColumnTwo.flexDirection = juce::FlexBox::Direction::column;
+    flexboxColumnTwo.flexWrap = juce::FlexBox::Wrap::noWrap;
+    flexboxColumnTwo.alignContent = juce::FlexBox::AlignContent::stretch;
+
+    juce::Array<juce::FlexItem> itemArrayColumnTwo;
+    itemArrayColumnTwo.add(juce::FlexItem(bounds.getWidth() / 6, bounds.getHeight() / 2, depthSlider).withMargin(juce::FlexItem::Margin(bounds.getHeight() * .25, 0, 0, 0)));
+
+    flexboxColumnTwo.items = itemArrayColumnTwo;
+    flexboxColumnTwo.performLayout(bounds.removeFromLeft(bounds.getWidth() / 4));
+    /* ============================================================================ */
+
+    //third column of gui
+    juce::FlexBox flexboxColumnThree;
+    flexboxColumnThree.flexDirection = juce::FlexBox::Direction::column;
+    flexboxColumnThree.flexWrap = juce::FlexBox::Wrap::noWrap;
+    flexboxColumnThree.alignContent = juce::FlexBox::AlignContent::stretch;
+
+    juce::Array<juce::FlexItem> itemArrayColumnThree;
+    itemArrayColumnThree.add(juce::FlexItem(bounds.getWidth() / 6, bounds.getHeight() / 2, centerDelaySlider).withMargin(juce::FlexItem::Margin(bounds.getHeight() * .25, 0, 0, 0)));
+
+    flexboxColumnThree.items = itemArrayColumnThree;
+    flexboxColumnThree.performLayout(bounds.removeFromLeft(bounds.getWidth() / 3));
+    /* ============================================================================ */
+
+    //fourth column of gui
+    juce::FlexBox flexboxColumnFour;
+    flexboxColumnFour.flexDirection = juce::FlexBox::Direction::column;
+    flexboxColumnFour.flexWrap = juce::FlexBox::Wrap::noWrap;
+    flexboxColumnFour.alignContent = juce::FlexBox::AlignContent::stretch;
+
+    juce::Array<juce::FlexItem> itemArrayColumnFour;
+    itemArrayColumnFour.add(juce::FlexItem(bounds.getWidth() / 6, bounds.getHeight() / 2, feedbackSlider).withMargin(juce::FlexItem::Margin(bounds.getHeight() * .25, 0, 0, 0)));
+
+    flexboxColumnFour.items = itemArrayColumnFour;
+    flexboxColumnFour.performLayout(bounds.removeFromLeft(bounds.getWidth() / 2));
+    /* ============================================================================ */
+
+    //fifth column of gui
+    juce::FlexBox flexboxColumnFive;
+    flexboxColumnFive.flexDirection = juce::FlexBox::Direction::column;
+    flexboxColumnFive.flexWrap = juce::FlexBox::Wrap::noWrap;
+    flexboxColumnFive.alignContent = juce::FlexBox::AlignContent::stretch;
+
+    juce::Array<juce::FlexItem> itemArrayColumnFive;
+    itemArrayColumnFive.add(juce::FlexItem(bounds.getWidth() / 6, bounds.getHeight() / 2, mixSlider).withMargin(juce::FlexItem::Margin(bounds.getHeight() * .25, 0, 0, 0)));
+
+    flexboxColumnFive.items = itemArrayColumnFive;
+    flexboxColumnFive.performLayout(bounds.removeFromLeft(bounds.getWidth()));
+    /* ============================================================================ */
+
+    windowBorder.setBounds(AudioProcessorEditor::getWidth() * .01, AudioProcessorEditor::getHeight() * 0.04, AudioProcessorEditor::getWidth() * .98, AudioProcessorEditor::getHeight() * .90);
 }
