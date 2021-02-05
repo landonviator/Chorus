@@ -1,0 +1,1 @@
+C:\Users\lando\Documents\GitHub\Chorus\Chorus_Windows\Builds\VisualStudio2019\x64\Debug\Shared Code\Chorus_Windows.lib
