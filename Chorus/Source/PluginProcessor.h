@@ -68,11 +68,15 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    float scaleRange (const float &input, const float &inputLow, const float &inputHigh, const float &outputLow, const float &outputHigh);
     
     juce::AudioProcessorValueTreeState treeState;
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
 private:
+    
+    juce::dsp::Chorus<float> chorusProcessor;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ChorusAudioProcessor)
 };

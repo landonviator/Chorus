@@ -59,7 +59,7 @@ private:
         
     juce::GroupComponent windowBorder;
         
-    juce::Label rateLabel, depthLabel, centerDelayLabel, feedbackLabel, mixLabel;
+    juce::Label rateLabel, depthLabel, centerDelayLabel, feedbackLabel, mixLabel, colorLabel, spaceLabel;
     std::vector<juce::Label*> labels;
         
     std::string rateSliderLabelText = "Rate";
