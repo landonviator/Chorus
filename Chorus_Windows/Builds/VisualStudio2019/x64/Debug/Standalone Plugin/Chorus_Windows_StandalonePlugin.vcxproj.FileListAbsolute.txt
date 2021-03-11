@@ -1,0 +1,2 @@
+C:\Users\lando\Documents\GitHub\Chorus\Chorus_Windows\Builds\VisualStudio2019\x64\Debug\Standalone Plugin\Chorus_Windows.exe
+C:\Users\lando\Documents\GitHub\Chorus\Chorus_Windows\Builds\VisualStudio2019\x64\Debug\Standalone Plugin\Chorus_Windows.pdb

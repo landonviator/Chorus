@@ -1,0 +1,2 @@
+C:\Users\lando\Documents\GitHub\Chorus\Chorus_Windows\Builds\VisualStudio2019\x64\Debug\VST3\Chorus_Windows.vst3
+C:\Users\lando\Documents\GitHub\Chorus\Chorus_Windows\Builds\VisualStudio2019\x64\Debug\VST3\Chorus_Windows.pdb
